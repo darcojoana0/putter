@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: potter-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: potter-client
+  template:
+    metadata:
+      labels:
+        app: potter-client
+    spec:
+      containers:
+        - name: potter
+          image: python:3.11-slim
+          securityContext:
+            runAsUser: 0  # executa como root
+          command: ["sh", "-c"]
+          args:
+            - |
+              apt update && apt install -y git curl;
+              git clone https://github.com/darcojoana0/pitter.git /app;
+              cd /app;
+              python main.py;
+          tty: true
+          stdin: true
